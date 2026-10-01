@@ -5,4 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print issue details
-        run: echo "${{ toJSON(github.event.issue) }}"
+        env:
+          ISSUE_JSON: ${{ toJSON(github.event.issue) }}
+        run: printf '%s\n' "$ISSUE_JSON"
