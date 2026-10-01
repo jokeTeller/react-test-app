@@ -1,5 +1,11 @@
 name: Precode Review
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/*'
+  workflow_dispatch:
 jobs:
   check:
     runs-on: ubuntu-latest
