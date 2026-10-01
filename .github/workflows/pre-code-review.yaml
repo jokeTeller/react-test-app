@@ -4,8 +4,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - '.github/workflows/*'
       - 'public/*'
+
   workflow_dispatch:
 jobs:
   check:
