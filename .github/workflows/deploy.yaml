@@ -17,8 +17,10 @@ jobs:
       - name: Run tests
         run: npm test
   build:
-    needs: check
+    needs: check 
     runs-on: ubuntu-latest
+    outputs:
+      js-filename: ${{ steps.get-js-filename.outputs.js-filename-var }}
     steps:
       - name: Get code
         uses: actions/checkout@v7
@@ -31,6 +33,9 @@ jobs:
         run: npm ci
       - name: Build code
         run: npm run build
+      - name: Get js filename
+        id: get-js-filename
+        run: find dist/assets/*.js -type f -execdir echo 'js-filename-var={}' >> $GITHUB_OUTPUT ';'
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -49,6 +54,8 @@ jobs:
           name: dist-files
       - name: Output contents
         run: ls
+      - name: Output js filename
+        run: echo "${{ needs.build.outputs.js-filename }}"
       - name: Deploy
         run: echo "=== Deploying ==="
 
