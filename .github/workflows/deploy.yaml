@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get built artifacts
-        uses: actions/download-artifact@8
+        uses: actions/download-artifact@v8
         with:
           name: Get built artifacts
       - name: Output contents
