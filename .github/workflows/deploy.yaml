@@ -1,0 +1,56 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - master
+    
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v7
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Run tests
+        run: npm test
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v7
+      # runner already has pre-installed NodeJS, this step just for test purposes
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci
+      - name: Build code
+        run: npm run build
+      - name: Upload artifacts
+        uses: action/upload-artifact@v7
+        with:
+          name: dist-files
+          path: |
+            dist
+            package.json
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get built artifacts
+        uses: actions/download-artifact@8
+        with:
+          name: Get built artifacts
+      - name: Output contents
+        run: ls
+      - name: Deploy
+        run: echo "=== Deploying ==="
+
+
+
+
