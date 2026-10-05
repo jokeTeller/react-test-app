@@ -45,7 +45,7 @@ jobs:
       - name: Get built artifacts
         uses: actions/download-artifact@v8
         with:
-          name: Get built artifacts
+          name: dist-files
       - name: Output contents
         run: ls
       - name: Deploy
