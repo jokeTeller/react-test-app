@@ -86,6 +86,13 @@ jobs:
         run: echo "${{ needs.build.outputs.js-filename }}"
       - name: Deploy
         run: echo "=== Deploying ==="
+  report:
+    if: failure()
+    needs: [lint, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print dummy data
+        run: echo "=== Print report ==="
 
 
 
