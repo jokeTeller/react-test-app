@@ -21,8 +21,32 @@ jobs:
         run: npm ci
       - name: Lint
         run: npm run lint
+  build:
+    needs: lint 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        id: cache
+        uses: actions/checkout@v7
+      - name: Cache dependencies
+        uses: actions/cache@v6
+        id: cache-modules
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Build code
+        id: build-code
+        run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist-files
+          path: dist
   deploy:
-    needs: lint
+    needs: build
     uses: ./.github/workflows/reusable.yaml
   report:
     if: failure()
