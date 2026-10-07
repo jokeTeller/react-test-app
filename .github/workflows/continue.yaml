@@ -37,7 +37,7 @@ jobs:
         run: echo "=== This step runs even after tests failure ==="
   report:
     if: failure()
-    needs: [lint, deploy]
+    needs: after-test
     runs-on: ubuntu-latest
     steps:
       - name: Print dummy data
