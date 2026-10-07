@@ -6,8 +6,14 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [10, 22, 24]
+        node-version: [22, 24]
         os: [ubuntu-latest, windows-latest]
+        include:
+          - node-version: 10
+            os: windows-latest
+        exclude:
+          - node-version: 24
+            os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: Get code
