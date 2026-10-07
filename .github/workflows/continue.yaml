@@ -1,0 +1,48 @@
+name: Continue
+on:
+  push:
+    branches:
+      - master
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v7
+      - name: Cache dependencies
+        uses: actions/cache@v6
+        id: cache-modules
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Run tests
+        continue-on-error: true
+        id: run-tests
+        run: npm test
+      - name: Upload test report
+        if: failure() && steps.run-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report
+          path: test.json
+  after-test:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dummy step
+        run: echo "=== This step runs even after tests failure ==="
+  report:
+    if: failure()
+    needs: [lint, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print dummy data
+        run: echo "=== Print report ==="
+
+
+
+
